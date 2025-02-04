@@ -9,9 +9,9 @@
     </div> 
     <div class="row justify-content-center">
         <div class="col-md-12">
-                @if($message = Session::get('success'))
-                <div class="alert alert-success mt-1"><p>{{ $message }}</p></div>
-                @endif
+            @if(session('success'))
+            <div class="alert alert-success mt-1">{{ session('success') }}</div>
+            @endif
             <table class="table table-bordered table-striped">
                 <tr>
                     <th class="text-center">カテゴリー名</th>

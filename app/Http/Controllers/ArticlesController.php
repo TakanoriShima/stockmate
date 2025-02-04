@@ -49,10 +49,10 @@ class ArticlesController extends Controller
         $article->save();
         // 商品一覧画面へリダイレクト
         return redirect()->route('articles.index')
-                        ->with('succes','商品名'.$article->name.'を登録しました');
+                        ->with('success', '商品名' . $article->name . 'を登録しました');
     }    
 
-    // 登録商品変更処理
+    // 登録商品変更画面表示
     public function edit(Request $request, $id){
         //dd($id);
         $article = Article::find($id);
@@ -88,7 +88,7 @@ class ArticlesController extends Controller
          $article->save();
          // 商品一覧画面へリダイレクト
          return redirect()->route('articles.index')
-                        ->with('succes','商品名'.$article->name.'を更新しました');
+                        ->with('success','商品名: '.$article->name.'を更新しました');
      }    
          //商品削除処理
      public function destroy(Request $request, $id){
@@ -98,7 +98,7 @@ class ArticlesController extends Controller
         $article->delete_flag = true;
         $article->save();
         return redirect()->route('articles.index')
-                        ->with('succes','商品名'.$article->name.'を削除しました');
+                        ->with('success', '商品名: ' . $article->name . 'を削除しました');
     }
 
        // public function show(Request $request){

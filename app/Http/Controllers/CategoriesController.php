@@ -14,7 +14,7 @@ class CategoriesController extends Controller
         return view('categories.create');
     }
 
-    // カテゴリー追加処理
+    // カテゴリー登録処理
     public function store(Request $request)
     {
         // バリデーション
@@ -37,8 +37,8 @@ class CategoriesController extends Controller
         // カテゴリーをデータベースに保存
         $category->save();
 
-        // 商品登録画面へリダイレクト
-        return redirect()->route('articles.create');
+        // カテゴリー登録画面へリダイレクト
+        return redirect()->route('articles.create')->with('success', 'カテゴリー名: ' . $category->name . 'を登録しました');;
     }
 
 }

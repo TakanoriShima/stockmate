@@ -16,6 +16,9 @@
                 @endforeach
                 </ul>
             @endif
+            @if(session('success'))
+            <div class="alert alert-success mt-1">{{ session('success') }}</div>
+            @endif
             @csrf
             <div class="form-check-inline mb-1">
                 @error('category_id')
