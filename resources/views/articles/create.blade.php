@@ -47,7 +47,7 @@
                 @enderror
                 <div class="col-12 mb-2 mt-2">
                     <div class="form-group">
-                    <input type="date" name="expiration_date" class="form-control" placeholder="使用期限" value="{{ old('expiration_date') }}">
+                    <input type="date" name="expiration_date" class="form-control" min="{{ date('Y-m-d') }}" placeholder="使用期限" value="{{ old('expiration_date') }}">
                     </div>
                 </div>
                 @error('stock')
@@ -55,7 +55,7 @@
                 @enderror
                 <div class="col-12 mb-2 mt-2">
                     <div class="form-group">
-                        <input type="text" name="stock" class="form-control" placeholder="ストック" value="{{ old('stock') }}">
+                        <input type="number" name="stock" class="form-control" min="1" placeholder="ストック" value="{{ old('stock') }}">
                     </div>
                 </div>
                 <div class="col-12 mb-2 mt-2">
