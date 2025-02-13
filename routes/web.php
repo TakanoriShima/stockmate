@@ -16,7 +16,7 @@ use App\Http\Controllers\ArticlesController;
 |
 */
 
-Route::get('/', [ToppageController::class, 'index'])->name('toppage.index');
+Route::get('/', [ToppageController::class, 'index'])->name('toppage.index')->middleware('guest');
 
 Auth::routes();
 

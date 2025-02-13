@@ -56,4 +56,17 @@ ul li {
   font-weight: bold;
 }
 
+.success {
+  color: green;
+  font-weight: bold;
+}
 
+.result {
+  color: blue;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-bottom: double 3px blue;
+  width: 50%;
+  margin: 0 auto;
+  margin-bottom: 20px;
+}
