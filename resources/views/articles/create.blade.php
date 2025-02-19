@@ -5,7 +5,7 @@
         <h1 class="text-center text-primary">持物登録</h1>
     </div> 
     <div class="row mb-2 justify-content-center">
-        <a class="offset-md-10 col-md-2 btn btn-success" href="{{ route('categories.create')}}">カテゴリー追加</a>
+        <a class="offset-md-10 col-md-2 btn btn-success" href="{{ route('categories.create')}}">カテゴリー操作</a>
     </div>   
     <div class="row container">
         <form action="{{ route('articles.store')}}" method="POST">

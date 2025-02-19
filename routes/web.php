@@ -22,7 +22,7 @@ Auth::routes();
 
 Route::get('articles/search', [ArticlesController::class, 'search'])->name('articles.search')->middleware('auth');
 Route::get('articles/select_articles', [ArticlesController::class, 'select_articles'])->name('articles.select_articles')->middleware('auth');
-Route::resource('categories', CategoriesController::class)->only(['create', 'store'])->middleware('auth');
+Route::resource('categories', CategoriesController::class)->only(['create', 'store', 'destroy', 'edit', 'update'])->middleware('auth');
 Route::resource('articles', ArticlesController::class)->except(['show'])->middleware('auth');
 
 

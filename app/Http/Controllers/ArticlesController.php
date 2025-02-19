@@ -12,7 +12,7 @@ class ArticlesController extends Controller
     public function index(Request $request){
         // ログインしているユーザーが登録した、削除していない持物一覧を使用期限の昇順に取得
         $articles = Article::whereHas('category', function ($query) {
-            $query->where('user_id', auth()->id());
+            $query->where('user_id', auth()->id())->where('delete_flag', false);
         })->where('delete_flag', false)->orderBy('expiration_date', 'asc')->get();
 
         return view('articles.index', ['articles' => $articles]);
@@ -20,8 +20,15 @@ class ArticlesController extends Controller
 
     // 持物登録画面表示
     public function create(Request $request){
-        // ログインしているユーザーが追加したカテゴリー一覧を取得
-        $categories = \Auth::user()->categories;
+        // ログインしているユーザーが追加した削除していないカテゴリー一覧を取得
+        $categories = \Auth::user()->categories->where('delete_flag', false);
+
+        // カテゴリーが1つも登録されていない場合は、カテゴリー登録ページへリダイレクト
+        if($categories->isEmpty()){
+            // セッションにエラーメッセージをセット
+            session()->flash('message', '最初にカテゴリーを登録してください。');
+            return redirect(route('categories.create'));
+        }
         
         return view('articles.create', ['categories'=> $categories]);
     }
@@ -36,7 +43,7 @@ class ArticlesController extends Controller
             'expiration_date' => 'required|date|after_or_equal:today', 
             'stock' => 'required|integer',
         ], [
-            // 期限切れは登録しないため当日から未来日付限定に設定  
+            // 過去の消費期限の持物は登録できないように、未来日付限定に設定  
             'expiration_date.after_or_equal' => '日付は今日以降を指定してください。',
             // 小数点は入力できないように設定    
             'stock.integer' => '在庫数は整数である必要があります。',
@@ -64,8 +71,8 @@ class ArticlesController extends Controller
     public function edit(Request $request, $id){
         // 指定idの持物データを取得
         $article = Article::find($id);
-        // ログインしているユーザーが追加したカテゴリー一覧を取得
-        $categories = \Auth::user()->categories;
+        // ログインしているユーザーが追加した削除していないカテゴリー一覧を取得
+        $categories = \Auth::user()->categories->where('delete_flag', false);
 
         return view('articles.edit', ['article'=> $article, 'categories'=> $categories]);
     }
@@ -102,7 +109,7 @@ class ArticlesController extends Controller
                     ->with('success','持物名: '.$article->name.'を更新しました');
     }    
 
-    // 持物削除処理
+    // 持物削除処理（論理削除）
      public function destroy(Request $request, $id){
         // 指定idの持物データを取得
         $article = Article::find($id);
@@ -111,6 +118,7 @@ class ArticlesController extends Controller
         // データベースのレコード更新
         $article->save();
 
+        // 持物一覧画面へリダイレクト
         return redirect()->route('articles.index')
                         //フラッシュメッセージの設定
                         ->with('success', '持物名: ' . $article->name . 'を削除しました');
@@ -119,7 +127,8 @@ class ArticlesController extends Controller
     // 持物検索画面表示
     public function search(Request $request){
         // ログインしているユーザーが登録したカテゴリー一覧を取得
-        $categories = \Auth::user()->categories;
+        $categories = \Auth::user()->categories->where('delete_flag', false);
+        // 各種変数を定義
         $category_ids = [];
         $keyword = '';
         $articles = [];
@@ -138,14 +147,14 @@ class ArticlesController extends Controller
         $category_ids = $request->input('categories', []);
         $expiration_date = $request->input('expiration_date');
 
-        // ログインしているユーザーが登録したカテゴリー一覧を取得
-        $categories = \Auth::user()->categories;
+        // ログインしているユーザーが登録した削除していないカテゴリー一覧を取得
+        $categories = \Auth::user()->categories->where('delete_flag', false);
 
         // クエリビルダーで検索条件を動的に構築
         $query = Article::query()->whereHas('category', function ($query) {
-            $query->where('user_id', \Auth()->id());
+            $query->where('user_id', \Auth()->id())->where('delete_flag', false);
         // 削除したものは表示しない  
-        })->where('delete_flag', 0);
+        })->where('delete_flag', false);
 
         // 持物名が入力されていたら
         if (!empty($keyword)) {
